@@ -1,12 +1,23 @@
 ---
-version: '3.5'
+  version: '3.5'
 
-services:
-  aqcu-ui:
-    build: .
-    image: aqcu-ui:1.9
-    ports:
-      - "8081:8081"
-      - "8444:8444"
-    env_file:
-      - "compose${AQCU_ENV_LOCAL}.env"
+  secrets:
+    tomcat_ssl_crt:
+      file: ./certificates/tomcat/tomcat-wildcard-dev.crt
+    tomcat_ssl_key:
+      file: ./certificates/tomcat/tomcat-wildcard-dev.key
+
+  services:
+    aqcu-ui:
+      build: .
+      image: aqcu-ui:1.9
+      ports:
+        - "80:80"
+        - "443:443"
+      secrets:
+        - source: tomcat_ssl_crt
+          target: /tomcat-wildcard-ssl.crt
+        - source: tomcat_ssl_key
+          target: /tomcat-wildcard-ssl.key
+      env_file:
+        - "compose.env"

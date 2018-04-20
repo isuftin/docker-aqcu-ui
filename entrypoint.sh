@@ -1,25 +1,35 @@
 #!/bin/sh
-set -e
-
-if [ -z "${KEYSTORE_PASSWORD_FILE}" ] || [ ! -f ${KEYSTORE_PASSWORD_FILE} ]; then
-  KEYSTORE_PASSWORD="changeme"
-else
-  KEYSTORE_PASSWORD=`cat $KEYSTORE_PASSWORD_FILE`
+if [ -f "$keystoreLocation" ]; then
+  rm $keystoreLocation
 fi
 
-if [ -n "${TOMCAT_CERT_PATH}" ]; then
-  openssl pkcs12 -export -in $TOMCAT_CERT_PATH -inkey $TOMCAT_KEY_PATH -name $keystoreSSLKey -out tomcat.p12 -password pass:$KEYSTORE_PASSWORD
-  keytool -v -importkeystore -deststorepass $KEYSTORE_PASSWORD -destkeystore $keystoreLocation -deststoretype PKCS12 -srckeystore tomcat.p12 -srcstorepass $KEYSTORE_PASSWORD -srcstoretype PKCS12 -noprompt
+if [ -n "${KEYSTORE_PASSWORD_FILE}" ] && [ -f "${KEYSTORE_PASSWORD_FILE}" ]; then
+  keystorePassword=`cat $KEYSTORE_PASSWORD_FILE`
+elif [ -n "${KEYSTORE_PASSWORD_FILE}" ]; then
+  echo "Keystore Password File specified as ${KEYSTORE_PASSWORD_FILE} not found. Exiting."
+  exit 1
+fi
+
+if [ -n "${TOMCAT_CERT_PATH}" ] && [ -n "${TOMCAT_KEY_PATH}" ]; then
+  openssl pkcs12 -export -in $TOMCAT_CERT_PATH -inkey $TOMCAT_KEY_PATH -name $keystoreSSLKey -out tomcat.pkcs12 -password pass:$keystorePassword
+  keytool -v -importkeystore -deststorepass $keystorePassword -destkeystore $keystoreLocation -deststoretype PKCS12 -srckeystore tomcat.pkcs12 -srcstorepass $keystorePassword -srcstoretype PKCS12 -noprompt
 fi
 
 if [ -d "${CERT_IMPORT_DIRECTORY}" ]; then
   for c in $CERT_IMPORT_DIRECTORY/*.crt; do
     FILENAME="${c}"
-    echo "Importing ${FILENAME}"
-    keytool -importcert -noprompt -trustcacerts -file $FILENAME -alias $FILENAME -keystore /etc/ssl/certs/java/cacerts -storepass changeit -noprompt;
+
+    keytool -list -keystore $JAVA_KEYSTORE -alias $FILENAME -storepass $JAVA_STOREPASS
+    if [ $? -eq 0 ]; then
+      echo "Alias ${FILENAME} already exists in keystore. Skipping."
+    else
+      echo "Importing ${FILENAME}"
+      keytool -importcert -noprompt -trustcacerts -file $FILENAME -alias $FILENAME -keystore $JAVA_KEYSTORE -storepass $JAVA_STOREPASS -noprompt;
+    fi
+
   done
 fi
 
-java -Djava.security.egd=file:/dev/./urandom -DkeystorePassword=$KEYSTORE_PASSWORD -jar app.war $@
+./bin/catalina.sh run $@
 
 exec env "$@"
