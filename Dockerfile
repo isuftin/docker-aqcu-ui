@@ -1,8 +1,8 @@
 FROM tomcat:8.0-jre8
 
 ENV artifact_id=aqcu-ui
-ENV artifact_repo=cida-public-releases
-ENV artifact_version=1.9
+ENV artifact_repo=cida-public-snapshots
+ENV artifact_version=1.9.1-SNAPSHOT
 ENV probe_version=3.0.0.M3
 
 RUN wget -O /usr/local/tomcat/webapps/timeseries.war "https://cida.usgs.gov/maven/service/local/artifact/maven/redirect?r=${artifact_repo}&g=gov.usgs.aqcu&a=${artifact_id}&v=${artifact_version}&e=war"
@@ -32,7 +32,7 @@ ENV aqcuWebserviceUrl=https://reporting.nwis.usgs.gov/timeseries-ws
 ENV aquariusServiceUrl=http://ts.nwis.usgs.gov
 ENV nwisRaInterfaceUrl=https://reporting.nwis.usgs.gov/
 ENV nwisRaServiceUrl=https://reporting.nwis.usgs.gov/service
-ENV nwisHelpEmail=GS-W_Help_NWIS-RA@usgs.gov
+ENV nwisHelpEmail=changeme@test.gov
 ENV development=true
 ENV TZ=America/Chicago
 
