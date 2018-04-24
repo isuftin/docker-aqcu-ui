@@ -15,17 +15,10 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
-  # Generate Certificates
-  - openssl genrsa -out .travis/wildcard.key 2048
-  - openssl req -nodes -newkey rsa:2048 -keyout  .travis/wildcard.key -out  .travis/wildcard.csr -subj "/C=US/ST=Wisconsin/L=Middleon/O=US Geological Survey/OU=WMA/CN=*"
-  - openssl x509 -req -days 9999 -in .travis/wildcard.csr -signkey .travis/wildcard.key  -out .travis/wildcard.crt
-  # Run NGINX server within Travis
-  - docker run -d -p 443:443 -p 80:80 -v ${PWD}/.travis/nginx.conf:/etc/nginx/nginx.conf -v ${PWD}/.travis/wildcard.crt:/etc/nginx/wildcard.crt -v ${PWD}/.travis/wildcard.key:/etc/nginx/wildcard.key nginx:latest && sleep 5
-
 
 install:
   - docker build -t aqcu-ui .
-  - docker-compose -f docker-compose-default.yml up -d --build
+  - docker-compose -f docker-compose.yml up -d --build
 
 script:
   - docker ps | grep -q aqcu-framework
