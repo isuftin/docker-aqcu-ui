@@ -1,6 +1,7 @@
 FROM tomcat:8.0-jre8
 
 ENV probe_version=3.0.0.M3
+
 ENV repo_name=aqcu-maven-snapshots
 ENV artifact_id=aqcu-ui
 ENV artifact_version=1.9.1-SNAPSHOT
