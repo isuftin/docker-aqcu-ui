@@ -10,7 +10,7 @@
   services:
     aqcu-ui:
       build: .
-      image: aqcu-ui:1.9
+      image: aqcu-ui
       ports:
         - "80:80"
         - "443:443"

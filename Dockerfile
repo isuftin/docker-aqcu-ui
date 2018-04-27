@@ -1,24 +1,28 @@
 FROM tomcat:8.0-jre8
 
-ENV artifact_id=aqcu-ui
-ENV artifact_repo=cida-public-snapshots
-ENV artifact_version=1.9.1-SNAPSHOT
 ENV probe_version=3.0.0.M3
 
-RUN wget -O /usr/local/tomcat/webapps/timeseries.war "https://cida.usgs.gov/maven/service/local/artifact/maven/redirect?r=${artifact_repo}&g=gov.usgs.aqcu&a=${artifact_id}&v=${artifact_version}&e=war"
-RUN wget -O /usr/local/tomcat/webapps/probe.war "https://github.com/psi-probe/psi-probe/releases/download/${probe_version}/probe.war"
+ENV repo_name=aqcu-maven-snapshots
+ENV artifact_id=aqcu-ui
+ENV artifact_version=1.9.1-SNAPSHOT
 
-RUN mkdir -p /usr/local/tomcat/ssl
+ADD pull-from-artifactory.sh pull-from-artifactory.sh
+RUN ["chmod", "+x", "pull-from-artifactory.sh"]
 
 ADD entrypoint.sh entrypoint.sh
 RUN ["chmod", "+x", "entrypoint.sh"]
+
+ADD setenv.sh /usr/local/tomcat/bin/setenv.sh
+RUN ["chmod", "+x", "/usr/local/tomcat/bin/setenv.sh"]
+
+RUN mkdir -p /usr/local/tomcat/ssl
 
 COPY server.xml /usr/local/tomcat/conf/server.xml
 COPY context.xml /usr/local/tomcat/conf/context.xml
 COPY tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
 
-COPY setenv.sh /usr/local/tomcat/bin/setenv.sh 
-RUN chmod +x /usr/local/tomcat/bin/setenv.sh
+RUN wget -O /usr/local/tomcat/webapps/probe.war "https://github.com/psi-probe/psi-probe/releases/download/${probe_version}/probe.war"
+RUN ./pull-from-artifactory.sh ${repo_name} gov.usgs.aqcu ${artifact_id} ${artifact_version} /usr/local/tomcat/webapps/timeseries.war
 
 ENV TOMCAT_CERT_PATH=/tomcat-wildcard-ssl.crt
 ENV TOMCAT_KEY_PATH=/tomcat-wildcard-ssl.key
