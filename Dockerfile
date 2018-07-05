@@ -4,7 +4,7 @@ ENV probe_version=3.0.0.M3
 
 ENV repo_name=aqcu-maven-snapshots
 ENV artifact_id=aqcu-ui
-ENV artifact_version=1.9.1-SNAPSHOT
+ENV artifact_version=1.9.2-SNAPSHOT
 
 ADD pull-from-artifactory.sh pull-from-artifactory.sh
 RUN ["chmod", "+x", "pull-from-artifactory.sh"]
@@ -37,7 +37,18 @@ ENV aquariusServiceUrl=http://ts.nwis.usgs.gov
 ENV nwisRaInterfaceUrl=https://reporting.nwis.usgs.gov/
 ENV nwisRaServiceUrl=https://reporting.nwis.usgs.gov/service
 ENV nwisHelpEmail=changeme@test.gov
+ENV oauthClientId=client-id
+ENV oauthClientAccessTokenUri=https://example.gov/oauth/token
+ENV oauthClientAuthorizationUri=https://example.gov/oauth/authorize
+ENV oauthResourceTokenKeyUri=https://example.gov/oauth/token_key
+ENV oauthResourceId=resource-id
+ENV oauthClientName=client-name
+ENV oauthScope=read
+ENV aqcuOauthRedirectUriTemplate=https://localhost/timeseries
+ENV oauthClientSecret=changeme
 ENV development=true
+ENV aqcuLoginPage=oauth2/authorization/waterAuth
+ENV OAUTH_CLIENT_SECRET_PATH=/oauthClientSecret.txt
 ENV TZ=America/Chicago
 
 ENTRYPOINT ["/usr/local/tomcat/entrypoint.sh"]
