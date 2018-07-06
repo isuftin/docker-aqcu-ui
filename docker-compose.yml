@@ -6,6 +6,8 @@
       file: ./certificates/tomcat/tomcat-wildcard-dev.crt
     tomcat_ssl_key:
       file: ./certificates/tomcat/tomcat-wildcard-dev.key
+    water_auth_secret:
+      file: ./secrets/oauthClientSecret.txt
 
   services:
     aqcu-ui:
@@ -19,5 +21,7 @@
           target: /tomcat-wildcard-ssl.crt
         - source: tomcat_ssl_key
           target: /tomcat-wildcard-ssl.key
+        - source: water_auth_secret
+          target: /oauthClientSecret.txt
       env_file:
         - "compose.env"

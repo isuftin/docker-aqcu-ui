@@ -15,6 +15,10 @@ if [ -n "${TOMCAT_CERT_PATH}" ] && [ -n "${TOMCAT_KEY_PATH}" ]; then
   keytool -v -importkeystore -deststorepass $keystorePassword -destkeystore $keystoreLocation -deststoretype PKCS12 -srckeystore tomcat.pkcs12 -srcstorepass $keystorePassword -srcstoretype PKCS12 -noprompt
 fi
 
+if [ -n "${OAUTH_CLIENT_SECRET_PATH}" ]; then
+  oauthClientSecret=$(cat ${OAUTH_CLIENT_SECRET_PATH})
+fi
+
 if [ -d "${CERT_IMPORT_DIRECTORY}" ]; then
   for c in $CERT_IMPORT_DIRECTORY/*.crt; do
     FILENAME="${c}"
