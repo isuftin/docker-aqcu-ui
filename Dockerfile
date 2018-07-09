@@ -26,6 +26,8 @@ RUN ./pull-from-artifactory.sh ${repo_name} gov.usgs.aqcu ${artifact_id} ${artif
 
 ENV TOMCAT_CERT_PATH=/tomcat-wildcard-ssl.crt
 ENV TOMCAT_KEY_PATH=/tomcat-wildcard-ssl.key
+ENV JAVA_KEYSTORE=/etc/ssl/certs/java/cacerts
+ENV JAVA_STOREPASS=changeit
 ENV keystoreLocation=/usr/local/tomcat/ssl/localkeystore.p12
 ENV keystorePassword=changeme
 ENV keystoreSSLKey=tomcat
