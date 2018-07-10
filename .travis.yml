@@ -4,6 +4,7 @@ language: ruby
 
 env:
   - DOCKER_COMPOSE_VERSION=1.21.1
+  - IMAGE_NAME=aqcu-ui
 
 services:
   - docker
@@ -11,6 +12,8 @@ services:
 before_install:
   - sudo apt-get update
   - sudo rm /usr/local/bin/docker-compose
+
+install:
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - curl -L https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64 > clair-scanner
@@ -19,15 +22,16 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
   - git clone https://github.com/docker/docker-bench-security.git
-
-install:
-  - docker build -t aqcu-ui .
+  - docker build -t ${IMAGE_NAME} .
   - docker-compose -f docker-compose.yml up -d --build
 
 script:
-  - docker ps | grep -q aqcu-ui
+  - docker ps | grep -q ${IMAGE_NAME}
   - cd docker-bench-security
+  - echo "Starting Docker bench security scanning on the built image. The following is informational only..."
   - sudo sh docker-bench-security.sh -c container_images
+  - cd ..
   - docker run -d --name db arminc/clair-db
   - docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.3
-  - clair-scanner -c "http://127.0.0.1:6060" --ip "$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')" aqcu-ui:latest || true
+  - echo "Starting Clair scanner. The following is informational only..."
+  - clair-scanner -c "http://127.0.0.1:6060" --ip "$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')" ${IMAGE_NAME}:latest || true
