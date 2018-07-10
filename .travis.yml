@@ -3,7 +3,9 @@ sudo: required
 language: ruby
 
 env:
-  - DOCKER_COMPOSE_VERSION="1.21.1" IMAGE_NAME="aqcu-ui"
+  global:
+    - DOCKER_COMPOSE_VERSION="1.21.1"
+    - IMAGE_NAME="aqcu-ui"
 
 services:
   - docker
