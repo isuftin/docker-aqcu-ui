@@ -2,7 +2,6 @@
 <Context>
 	<WatchedResource>WEB-INF/web.xml</WatchedResource>
 	<Manager pathname="" />
-	<Environment name="cida.auth.service.endpoint" override="true" type="java.lang.String" value="${cida_auth_service_endpoint}" />
 	<Environment name="aqcu.reports.webservice" override="true" type="java.lang.String" value="${aqcu_reports_webservice}" />
 	<Environment name="aquarius.service.endpoint" override="true" type="java.lang.String" value="${aquarius_service_endpoint}" />
 	<Environment name="nwis-ra.home" override="true" type="java.lang.String" value="${nwis_ra_home}" />
