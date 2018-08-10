@@ -53,4 +53,8 @@ ENV aqcuLoginPage=oauth2/authorization/waterAuth
 ENV OAUTH_CLIENT_SECRET_PATH=/oauthClientSecret.txt
 ENV TZ=America/Chicago
 
-ENTRYPOINT ["/usr/local/tomcat/entrypoint.sh"]
+RUN rm -rf /usr/local/tomcat/webapps/ROOT && \
+  rm -rf /usr/local/tomcat/webapps/docs && \
+  rm -rf /usr/local/tomcat/webapps/examples
+
+CMD ["/usr/local/tomcat/entrypoint.sh"]
