@@ -75,7 +75,20 @@
         maxPostSize="100000000"
     />
 
-    <Connector port="${https_port}" maxHttpHeaderSize="65536" maxThreads="150" scheme="https" secure="true" SSLEnabled="true" keystoreFile="${keystoreLocation}" keystorePass="${keystorePassword}" clientAuth="false" keyAlias="${keystoreSSLKey}" sslProtocol="TLS"/>
+  <Connector 
+        port="${https_port}" 
+        maxHttpHeaderSize="65536" 
+        maxThreads="150" 
+        scheme="https" 
+        secure="true" 
+        SSLEnabled="true" 
+        keystoreFile="${keystoreLocation}" 
+        keystorePass="${keystorePassword}" 
+        clientAuth="false" 
+        keyAlias="${keystoreSSLKey}"
+        SSLProtocol="TLSv1.2"
+        ciphers="TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_RSA_WITH_AES_256_CBC_SHA256,TLS_RSA_WITH_AES_256_CBC_SHA,TLS_RSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_3DES_EDE_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384"
+    />
 
     <!-- Define an AJP 1.3 Connector on port 8009 -->
     <Connector port="8009" protocol="AJP/1.3" redirectPort="${https_port}" />
