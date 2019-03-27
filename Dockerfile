@@ -4,7 +4,7 @@ ENV probe_version=3.0.0.M3
 
 ENV repo_name=aqcu-maven-centralized
 ENV artifact_id=aqcu-ui
-ENV artifact_version=1.9.6-SNAPSHOT
+ENV artifact_version=1.9.6
 
 ADD pull-from-artifactory.sh pull-from-artifactory.sh
 RUN ["chmod", "+x", "pull-from-artifactory.sh"]
